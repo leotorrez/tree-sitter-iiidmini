@@ -1,0 +1,41 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "iiidmini",
+      "camelcase": "IIIDMini",
+      "title": "3DM Parser",
+      "scope": "source.iiidmini",
+      "file-types": [
+        ".ini"
+      ],
+      "injection-regex": "^iiidmini$",
+      "class-name": "TreeSitterIiidmini"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "3DM Parser",
+    "authors": [
+      {
+        "name": "Leandro Torrez",
+        "email": "leotorrez@gmail.com",
+        "url": "http://github.com/leotorrez"
+      }
+    ],
+    "links": {
+      "repository": "http://github.com/leotorrez/tree-sitter-iiidmini",
+      "funding": "http://github.com/leotorrez/tree-sitter-iiidmini"
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": true,
+    "node": true,
+    "python": true,
+    "rust": true,
+    "swift": true,
+    "zig": false
+  }
+}
