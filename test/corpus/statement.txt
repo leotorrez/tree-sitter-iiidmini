@@ -4,13 +4,49 @@ Basic Statement
 ==================
 [Present]
 $value = 1
+; comment
+run = CommandListExample
 ---
-
 (source_file
   (present_section
-    body: (key_value_pair
-        (variable
-          (identifier))
-        (number))))
+    (assignment
+            (variable name: (identifier))
+            (float))
+    (comment)
+    (commandlist 
+            (commandlist_larg)
+            (commandlist_rarg))
+    ))
 
+
+==================
+Basic namespaced header section
+==================
+namespace = test
+condition = 1
+; Comment
+---
+(source_file
+  (header_section
+    (namespace_statement (identifier))
+    (condition_statement (eval_value))
+    (comment)
+  ))
+
+==================
+Shader Override declaration
+==================
+[ShaderOverrideHealthPS]
+; Comment
+hash = 4f028a0d23349e1f
+allow_duplicate_hash = overrule
+---
+(source_file
+  (shader_override
+    name: (identifier)
+    (comment)
+    hash: (hash_16)
+    allow_duplicate_hash: (allow_duplicate_hash_value)
+  )
+)
 

@@ -1,6 +1,11 @@
 [
   {
-    "type": "key_value_pair",
+    "type": "allow_duplicate_hash_value",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "assignment",
     "named": true,
     "fields": {},
     "children": {
@@ -8,7 +13,15 @@
       "required": true,
       "types": [
         {
-          "type": "number",
+          "type": "float",
+          "named": true
+        },
+        {
+          "type": "scope_prefix",
+          "named": true
+        },
+        {
+          "type": "timing_prefix",
           "named": true
         },
         {
@@ -19,15 +32,174 @@
     }
   },
   {
+    "type": "commandlist",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "commandlist_rarg",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "commandlist_rarg",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "comment",
+    "named": true,
+    "extra": true,
+    "fields": {}
+  },
+  {
+    "type": "condition_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "eval_value",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "eval_value",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "float",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "float",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "header_section",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "condition_statement",
+          "named": true
+        },
+        {
+          "type": "namespace_statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "identifier",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "namespace_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "present_section",
     "named": true,
     "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "Present",
+            "named": false
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "assignment",
+          "named": true
+        },
+        {
+          "type": "commandlist",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "scope_prefix",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "shader_override",
+    "named": true,
+    "fields": {
+      "allow_duplicate_hash": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "allow_duplicate_hash_value",
+            "named": true
+          }
+        ]
+      },
       "body": {
         "multiple": true,
         "required": false,
         "types": [
           {
-            "type": "key_value_pair",
+            "type": "assignment",
+            "named": true
+          },
+          {
+            "type": "commandlist",
+            "named": true
+          }
+        ]
+      },
+      "hash": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "hash_16",
             "named": true
           }
         ]
@@ -37,8 +209,8 @@
         "required": true,
         "types": [
           {
-            "type": "Present",
-            "named": false
+            "type": "identifier",
+            "named": true
           }
         ]
       }
@@ -54,29 +226,47 @@
       "required": false,
       "types": [
         {
+          "type": "header_section",
+          "named": true
+        },
+        {
           "type": "present_section",
+          "named": true
+        },
+        {
+          "type": "shader_override",
           "named": true
         }
       ]
     }
+  },
+  {
+    "type": "timing_prefix",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "variable",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "identifier",
-          "named": true
-        }
-      ]
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
     "type": "$",
+    "named": false
+  },
+  {
+    "type": ";",
     "named": false
   },
   {
@@ -88,6 +278,10 @@
     "named": false
   },
   {
+    "type": "ShaderOverride",
+    "named": false
+  },
+  {
     "type": "[",
     "named": false
   },
@@ -96,11 +290,51 @@
     "named": false
   },
   {
-    "type": "identifier",
+    "type": "allow_duplicate_hash",
+    "named": false
+  },
+  {
+    "type": "condition",
+    "named": false
+  },
+  {
+    "type": "false",
+    "named": false
+  },
+  {
+    "type": "global",
+    "named": false
+  },
+  {
+    "type": "hash",
+    "named": false
+  },
+  {
+    "type": "hash_16",
     "named": true
   },
   {
-    "type": "number",
-    "named": true
+    "type": "local",
+    "named": false
+  },
+  {
+    "type": "namespace",
+    "named": false
+  },
+  {
+    "type": "overrule",
+    "named": false
+  },
+  {
+    "type": "post",
+    "named": false
+  },
+  {
+    "type": "pre",
+    "named": false
+  },
+  {
+    "type": "true",
+    "named": false
   }
 ]
