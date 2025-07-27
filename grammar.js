@@ -16,10 +16,8 @@ const decimal_integer = /[+-]?(0|[1-9](_?[0-9])*)/;
 const decimal_integer_in_float_exponent_part = /[+-]?[0-9](_?[0-9])*/; // allow leading zeros
 const float_fractional_part = /[.][0-9](_?[0-9])*/;
 const float_exponent_part = seq(/[eE]/, decimal_integer_in_float_exponent_part);
-
 const hash_16 = /[a-zA-Z0-9]{16}/;
 const hash_8 = /[a-zA-Z0-9]{8}/;
-
 const literal_string = /[a-zA-Z]+/;
 
 module.exports = grammar({
@@ -30,11 +28,19 @@ module.exports = grammar({
     source_file: ($) => seq(optional($.header_section), repeat($._section)),
 
     header_section: ($) =>
-      seq($.namespace_statement, optional($.condition_statement)),
+      choice($._header_section_namespaced, $._header_section_conditioned),
 
-    namespace_statement: ($) => seq("namespace", "=", $.identifier),
+    _header_section_namespaced: ($) =>
+      seq(
+        seq("namespace", "=", field("namespace", $.string), newline),
+        named_field("condition", $.eval_value),
+      ),
 
-    condition_statement: ($) => seq("condition", "=", $.eval_value),
+    _header_section_conditioned: ($) =>
+      seq(
+        seq("condition", "=", field("condition", $.eval_value), newline),
+        named_field("namespace", $.string),
+      ),
 
     _section: ($) => choice($._regular_section, $._named_section),
     _named_section: ($) =>
@@ -63,11 +69,25 @@ module.exports = grammar({
         // $.profile_section,
         // $.convergence_map_section,
         // $.unnamed_include_section,
-        // $.loader_section,
+        // $.loader_section,
       ),
 
-    present_section: ($) =>
-      seq("[", field("name", "Present"), "]", newline, repeat($._expression)),
+    loader_section: ($) =>
+      seq(
+        section_name("Loader"),
+        named_field("loader", $.string),
+        named_field("target", $.string),
+        named_field("module", $.path),
+        named_field("check_version", $.boolean),
+        named_field("require_admin", $.boolean),
+        named_field("entry_point", $.string),
+        named_field("hook_proc", $.integer),
+        named_field("launch", $.path),
+        named_field("wait_for_target", $.boolean),
+        named_field("delay", $.integer),
+      ),
+
+    present_section: ($) => seq(section_name("Present"), repeat($._expression)),
 
     shader_override: ($) =>
       seq(
@@ -83,6 +103,8 @@ module.exports = grammar({
 
     allow_duplicate_hash_value: ($) => choice("overrule", "true", "false"),
 
+    expression: ($) => $._expression,
+    // TODO: add expressions logic here
     _expression: ($) =>
       choice(
         // $.key_value_pair,
@@ -110,6 +132,51 @@ module.exports = grammar({
     commandlist_larg: ($) => literal_string,
     commandlist_rarg: ($) => literal_string,
 
+    identifier: ($) => literal_string,
+
+    // if_statement: ($) =>
+    //   seq(
+    //     "if",
+    //     field("condition", $.expression),
+    //     newline,
+    //     field("consequence", $._suite),
+    //     repeat(field("alternative", $.elif_clause)),
+    //     optional(field("alternative", $.else_clause)),
+    //   ),
+    //
+    // elif_clause: ($) =>
+    //   seq(
+    //     "elif",
+    //     field("condition", $.expression),
+    //     newline,
+    //     field("consequence", $._suite),
+    //   ),
+    //
+    //
+    // else_clause: ($) => seq("else", newline, field("body", $._suite)),
+    //
+    // endif_statement: ($) => seq("endif", newline),
+
+    comment: ($) =>
+      choice(
+        //TODO: it can not be inline comments. Tecnically the first case matches
+        seq(";", literal_string, newline),
+        seq(newline, ";", literal_string),
+      ),
+
+    hash_16: ($) => hash_16,
+    hash_8: ($) => hash_8,
+    string: ($) => literal_string,
+    path: ($) => literal_string,
+    boolean: ($) => /^(true|false|0|1)$/,
+    integer: ($) =>
+      choice(
+        decimal_integer,
+        // hexadecimal_integer,
+        // octal_integer,
+        // binary_integer,
+      ),
+
     float: ($) =>
       choice(
         token(
@@ -123,27 +190,6 @@ module.exports = grammar({
         ),
         /[+-]?(inf|nan)/,
       ),
-
-    integer: ($) =>
-      choice(
-        decimal_integer,
-        // hexadecimal_integer,
-        // octal_integer,
-        // binary_integer,
-      ),
-
-    identifier: ($) => literal_string,
-
-    comment: ($) =>
-      choice(
-        //TODO: it can not be inline comments. Tecnically the first case matches
-        seq(";", literal_string, newline),
-
-        seq(newline, ";", literal_string),
-      ),
-
-    hash_16: ($) => hash_16,
-    hash_8: ($) => hash_8,
     // _literal_string: $ =>
     //   seq(
     //     "'",
@@ -167,5 +213,15 @@ module.exports = grammar({
  * @returns {ChoiceRule}
  */
 function named_field(name, value) {
-  return optional(seq(name, "=", field(name, value)));
+  return optional(seq(name, "=", field(name, value), newline));
+}
+/**
+ * Creates a case insensitive section name rule.
+ *
+ * @param {String} name
+ *
+ * @returns {TokenRule}
+ */
+function section_name(name) {
+  return token(seq("[", field("name", name), "]", newline));
 }

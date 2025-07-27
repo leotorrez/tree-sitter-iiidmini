@@ -1,4 +1,3 @@
-
 ==================
 Basic Statement
 ==================
@@ -13,7 +12,7 @@ run = CommandListExample
             (variable name: (identifier))
             (float))
     (comment)
-    (commandlist 
+    (commandlist
             (commandlist_larg)
             (commandlist_rarg))
     ))
@@ -25,14 +24,25 @@ Basic namespaced header section
 namespace = test
 condition = 1
 ; Comment
+
 ---
 (source_file
   (header_section
-    (namespace_statement (identifier))
-    (condition_statement (eval_value))
+    namespace: (string)
+    condition: (eval_value)
     (comment)
   ))
 
+==================
+Basic header withoutnamesapcing
+==================
+; Comment
+[Present]
+
+---
+(source_file
+ (comment)
+  (present_section))
 ==================
 Shader Override declaration
 ==================
@@ -40,6 +50,7 @@ Shader Override declaration
 ; Comment
 hash = 4f028a0d23349e1f
 allow_duplicate_hash = overrule
+
 ---
 (source_file
   (shader_override
